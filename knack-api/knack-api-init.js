@@ -1,4 +1,4 @@
-import KnackAPI from 'https://cdn.skypack.dev/knack-api-helper@2.2.4'
+import KnackAPI from 'knack-api-helper';
 
 export async function knackApiInit() {
 
