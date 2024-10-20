@@ -2,9 +2,9 @@ import KnackAPI from 'knack-api-helper';
 
 export async function knackApiInit() {
 
-    runEnv = process.env.KNACK_API_RUNENV
+    const runEnv = process.env.KNACK_API_RUNENV
 
-    if (runEnv = 'browser') {
+    if (runEnv === 'browser') {
         return new KnackAPI({
             auth: 'view-based',
             applicationId: Knack.application_id,
@@ -12,7 +12,7 @@ export async function knackApiInit() {
         });
     }
 
-    if (runEnv = 'server') {
+    if (runEnv === 'server') {
         const userToken = await knackLogin()
         return new KnackAPI({
             auth: 'view-based',
@@ -34,7 +34,7 @@ async function knackLogin() {
 
     //Now we remotely login to Knack to obtain a user token & append it to knackAPI
     try {
-        await knackAPI.login({
+        return await knackAPI.login({
             email: process.env.KNACK_API_LOGIN,
             password: process.env.KNACK_API_PASSWORD
         });
