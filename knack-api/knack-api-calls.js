@@ -2,7 +2,7 @@ import KnackAPI from 'https://cdn.skypack.dev/knack-api-helper@2.2.4'
 import { knackApiInit } from './knack-api-init.js'
 
 // get
-export async function knackApiViewGetSingle(payload) {
+async function knackApiViewGetSingle(payload) {
     const knackAPI = await knackApiInit()
     console.log("api call started")
     try {
@@ -16,7 +16,7 @@ export async function knackApiViewGetSingle(payload) {
     }
 }
 
-export async function knackApiViewGetMany(payload) {
+async function knackApiViewGetMany(payload) {
     const knackAPI = await knackApiInit()
     console.log("api call started")
     try {
@@ -29,7 +29,7 @@ export async function knackApiViewGetMany(payload) {
     }
 }
 
-export async function knackApiViewGetManyParentRecord(payload) {
+async function knackApiViewGetManyParentRecord(payload) {
 
     const basePayload = payload
     var iteration = 1
@@ -62,7 +62,7 @@ export async function knackApiViewGetManyParentRecord(payload) {
 }
 
 // post
-export async function knackApiViewPostMany(payload) {
+async function knackApiViewPostMany(payload) {
     const knackAPI = await knackApiInit()
     console.log("api call started")
     try {
@@ -80,7 +80,7 @@ export async function knackApiViewPostMany(payload) {
     }
 }
 
-export async function knackApiViewPostSingle(payload) {
+async function knackApiViewPostSingle(payload) {
     const knackAPI = await knackApiInit()
     console.log("api call started")
     try {
@@ -95,7 +95,7 @@ export async function knackApiViewPostSingle(payload) {
 }
 
 // put
-export async function knackApiViewPutSingle(payload) {
+async function knackApiViewPutSingle(payload) {
     const knackAPI = await knackApiInit()
     console.log("api call started")
     try {
@@ -109,7 +109,7 @@ export async function knackApiViewPutSingle(payload) {
     }
 }
 
-export async function knackApiViewPutMany(payload) {
+async function knackApiViewPutMany(payload) {
     const knackAPI = await knackApiInit()
     console.log("api call started")
     try {
@@ -128,7 +128,7 @@ export async function knackApiViewPutMany(payload) {
 }
 
 // delete
-export async function knackApiViewDeleteSingle(payload) {
+async function knackApiViewDeleteSingle(payload) {
     const knackAPI = await knackApiInit()
     console.log("api call started")
     try {
@@ -142,7 +142,7 @@ export async function knackApiViewDeleteSingle(payload) {
 }
 
 // report
-export async function knackApiViewGetFromReport(payload) {
+async function knackApiViewGetFromReport(payload) {
 
     if (payload.filters) {
 
@@ -188,7 +188,7 @@ export async function knackApiViewGetFromReport(payload) {
 }
 
 // uplaod file/image asset
-export async function knackUploadAsset(file) {
+async function knackUploadAsset(file) {
 
     var url = `https://api.knack.com/v1/applications/${Knack.application_id}/assets/file/upload`
 
@@ -230,8 +230,6 @@ async function fetchAPIcall(payload, headers) {
         return err
     }
 }
-
-
 
 export const calls = {
     // get

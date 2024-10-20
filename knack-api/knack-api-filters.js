@@ -1,12 +1,12 @@
 
-export function createFilters(condition) {
+function createFilters(condition) {
     return {
         "match": condition,
         "rules": []
     }
 }
 
-export function Commonfilters(field_key) {
+function Commonfilters(field_key) {
 
     return {
         isDuringTheCurrentMonth: {
@@ -37,6 +37,6 @@ export function Commonfilters(field_key) {
 }
 
 export const filters = {
-create: (condition) => createFilters(condition),
-common : (field_key) => Commonfilters(field_key)
+    create: (condition) => createFilters(condition),
+    common: (field_key) => Commonfilters(field_key)
 }

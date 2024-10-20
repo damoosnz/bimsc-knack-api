@@ -1,7 +1,7 @@
 // function to prepare API Payload post many
 
 // Put
-export function createApiPayloadPutSingle(sceneKey, viewKey, record_id, recordData) {
+function createApiPayloadPutSingle(sceneKey, viewKey, record_id, recordData) {
     const payload = {
         scene: sceneKey,
         view: viewKey,
@@ -10,7 +10,7 @@ export function createApiPayloadPutSingle(sceneKey, viewKey, record_id, recordDa
     }
     return payload
 }
-export function createApiPayloadPutMany(sceneKey, viewKey, records, progress) {
+function createApiPayloadPutMany(sceneKey, viewKey, records, progress) {
 
     // scene_1709/views/view_4124
 
@@ -26,7 +26,7 @@ export function createApiPayloadPutMany(sceneKey, viewKey, records, progress) {
 
 
 // Post
-export function createApiPayloadPostSingle(sceneKey, viewKey, record) {
+function createApiPayloadPostSingle(sceneKey, viewKey, record) {
 
     const payload = {
         scene: sceneKey,
@@ -36,7 +36,7 @@ export function createApiPayloadPostSingle(sceneKey, viewKey, record) {
     return payload
 
 }
-export function createApiPayloadPostMany(sceneKey, viewKey, records) {
+function createApiPayloadPostMany(sceneKey, viewKey, records) {
 
     // scene_1704/views/view_4122
 
@@ -49,7 +49,7 @@ export function createApiPayloadPostMany(sceneKey, viewKey, records) {
 
 }
 //get
-export function createApiPayloadGetSingle(sceneKey, viewKey, record_id) {
+function createApiPayloadGetSingle(sceneKey, viewKey, record_id) {
 
     const payload = {
         scene: sceneKey,
@@ -59,7 +59,7 @@ export function createApiPayloadGetSingle(sceneKey, viewKey, record_id) {
     return payload
 
 }
-export function createApiPayloadGetMany(sceneKey, viewKey, filters, parentRecord, format) {
+function createApiPayloadGetMany(sceneKey, viewKey, filters, parentRecord, format) {
 
     if (parentRecord) {
         var url = `https://api.knack.com/v1/pages/${sceneKey}/views/${viewKey}/records?${parentRecord.name}_id=${parentRecord.id}`
@@ -85,7 +85,7 @@ export function createApiPayloadGetMany(sceneKey, viewKey, filters, parentRecord
     }
 }
 //delete
-export function createApiPayloadDeleteSingle(sceneKey, viewKey, record) {
+function createApiPayloadDeleteSingle(sceneKey, viewKey, record) {
     const payload = {
         recordId: record.id,
         scene: sceneKey,
@@ -95,7 +95,7 @@ export function createApiPayloadDeleteSingle(sceneKey, viewKey, record) {
 }
 
 //report
-export function createApiPayloadGetFromReport(sceneKey, viewKey, filters = {}) {
+function createApiPayloadGetFromReport(sceneKey, viewKey, filters = {}) {
 
     if (filters) {
 
