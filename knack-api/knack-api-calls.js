@@ -68,8 +68,8 @@ async function knackApiViewPostMany(payload) {
     try {
         const responses = await knackAPI.postMany(payload);
         if (responses.summary.rejected > 0) {
-            res.summary.errors.forEach(err => {
-                errorHandler(err.reason);
+            responses.summary.errors.forEach(err => {
+               console.log(JSON.stringify(err.reason));
             })
         }
         console.log("api call completed")
