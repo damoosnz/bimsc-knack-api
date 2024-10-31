@@ -667,7 +667,7 @@ var import_knack_api_helper2 = __toESM(require_knack_api_helper(), 1);
 // knack-api/knack-api-init.js
 var import_knack_api_helper = __toESM(require_knack_api_helper(), 1);
 async function knackApiInit() {
-  const runEnv = process.env.KNACK_API_RUNENV;
+  const runEnv = "browser";
   if (runEnv === "browser") {
     return new import_knack_api_helper.default({
       auth: "view-based",
