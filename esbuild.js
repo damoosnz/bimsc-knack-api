@@ -1,12 +1,13 @@
 import esbuild from 'esbuild'
 
-// Run the esbuild process
 esbuild.build({
-  entryPoints: ['index.js'], // Your entry file
-  bundle: true, // Bundle the whole project
-  outfile: 'dist/bundle.js', // Output file
-  minify: true, // Optional: Minify the output
-  sourcemap: true, // Optional: Generate sourcemaps
-  target: ['es2020'], // Optional: Specify the target environment
-  platform: 'browser', // Target the browser environment
-}).catch(() => process.exit(1)); // Exit with error if build fails
+    entryPoints: ['index.js'], // Entry point to your project
+    bundle: true, // Bundle the whole project
+    outfile: 'dist/bundle.js', // Output bundle file
+    format: 'esm', // Output as an ES module (so you can import it)
+    platform: 'browser', // Ensure it's bundled for browser usage
+    globalName: 'knackApi', // Expose the knackApi object globally if needed
+    target: ['es2020'], // Optional: Specify the target environment
+    sourcemap: true, // Optional: Generate sourcemaps
+    minify: false // Optional: You can minify if needed
+  }).catch(() => process.exit(1));
