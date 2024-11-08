@@ -3,10 +3,9 @@ export const timeout = {
 };
 
 function setApiCallTImeLimit(duration) {
-
-    return new Promise((_, reject) => {
+    return new Promise((resolve) => {
         setTimeout(() => {
-            reject(new Error("Update process timed out after 5 minutes"));
+            resolve("Update process timed out after " + (duration / (1000*60)) + " minutes");  // Resolve with a message
         }, duration);
     });
 }
