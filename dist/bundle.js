@@ -849,10 +849,41 @@ var calls = {
   postMany: (payload) => knackApiViewPostMany(payload),
   //put
   putMany: (payload) => knackApiViewPutMany(payload),
+  putMany2: (payload) => knackApiViewPutMany2(payload),
   putSingle: (payload) => knackApiViewPutSingle(payload),
   // delete
   deleteSingle: (payload) => knackApiViewDeleteSingle(payload)
 };
+async function knackApiViewPutMany2(payload) {
+  const knackAPI = await knackApiInit();
+  console.log("api call started");
+  const records2 = payload.records;
+  const numRecords = records2.length;
+  const numBatches = Math.ceil(numRecords / 1e3);
+  const batches = [];
+  for (var i = 0; i < numBatches; i++) {
+    const batch2 = records2.slice(i * 1e3, (i + 1) * 1e3);
+    batches.push(batch2);
+  }
+  const result = [];
+  for (var batch of batches) {
+    const batchPayload = knackApi.payloads.putMany(payload.scene, payload.view, batch);
+    try {
+      const responses = await knackAPI.putMany(payload);
+      if (responses.summary.rejected > 0) {
+        res.summary.errors.forEach((err) => {
+          errorHandler(err.reason);
+        });
+      }
+      console.log("api call completed");
+      result.push(responses);
+    } catch (err) {
+      console.log("api call failed", err);
+      return null;
+    }
+  }
+  return result;
+}
 
 // knack-api/knack-api-utils.js
 var utils = {
@@ -886,12 +917,25 @@ function isoDatestoKnackDatesDDMMYYYY(isoDate) {
   };
 }
 
+// knack-api/knack-api-timeout.js
+var timeout = {
+  set: (duration = 5 * 60 * 1e3) => setApiCallTImeLimit(duration)
+};
+function setApiCallTImeLimit(duration) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("Update process timed out after " + duration / (1e3 * 60) + " minutes");
+    }, duration);
+  });
+}
+
 // index.js
 var knackApi = {
   filters: filters2,
   payloads,
   calls,
-  utils
+  utils,
+  timeout
 };
 export {
   knackApi
