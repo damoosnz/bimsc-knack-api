@@ -270,7 +270,7 @@ async function knackApiViewPutMany2(payload) {
     for (var batch of batches) {
         const batchPayload = knackApi.payloads.putMany(payload.scene, payload.view, batch)
         try {
-            const responses = await knackAPI.putMany(payload);
+            const responses = await knackAPI.putMany(batchPayload);
             if (responses.summary.rejected > 0) {
                 res.summary.errors.forEach(err => {
                     errorHandler(err.reason);
