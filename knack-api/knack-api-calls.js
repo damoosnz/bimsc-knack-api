@@ -69,7 +69,7 @@ async function knackApiViewPostMany(payload) {
         const responses = await knackAPI.postMany(payload);
         if (responses.summary.rejected > 0) {
             responses.summary.errors.forEach(err => {
-               console.log(JSON.stringify(err.reason));
+                console.log(JSON.stringify(err.reason));
             })
         }
         console.log("api call completed")
@@ -241,8 +241,45 @@ export const calls = {
     postMany: (payload) => knackApiViewPostMany(payload),
     //put
     putMany: (payload) => knackApiViewPutMany(payload),
+    putMany2:  (payload) => knackApiViewPutMany2(payload),
     putSingle: (payload) => knackApiViewPutSingle(payload),
     // delete
     deleteSingle: (payload) => knackApiViewDeleteSingle(payload),
 
+}
+
+async function knackApiViewPutMany2(payload) {
+
+    const knackAPI = await knackApiInit()
+    console.log("api call started")
+
+    const records = payload.records
+    const numRecords = records.length
+    const numBatches = Math.ceil(numRecords / 1000)
+    const batches = []
+
+    for (var i = 0; i < numBatches; i++) {
+        const batch = records.slice(i * 1000, (i + 1) * 1000)
+        batches.push(batch)
+    }
+
+    const responses = []
+
+    for (var batch of batches) {
+
+    }
+
+    try {
+        const responses = await knackAPI.putMany(payload);
+        if (responses.summary.rejected > 0) {
+            res.summary.errors.forEach(err => {
+                errorHandler(err.reason);
+            })
+        }
+        console.log("api call completed")
+        return responses
+    } catch (err) {
+        console.log("api call failed", err)
+        return null;
+    }
 }
