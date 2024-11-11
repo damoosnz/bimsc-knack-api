@@ -242,7 +242,7 @@ export const calls = {
     postMany: (payload) => knackApiViewPostMany(payload),
     //put
     putMany: (payload) => knackApiViewPutMany(payload),
-    putMany2:  (payload) => knackApiViewPutMany2(payload),
+    putMany2: (payload) => knackApiViewPutMany2(payload),
     putSingle: (payload) => knackApiViewPutSingle(payload),
     // delete
     deleteSingle: (payload) => knackApiViewDeleteSingle(payload),
@@ -256,7 +256,7 @@ async function knackApiViewPutMany2(payload) {
 
     const records = payload.records
     const numRecords = records.length
-    const recPerBatch =10
+    const recPerBatch = 1000
     const numBatches = Math.ceil(numRecords / recPerBatch)
     const batches = []
 
@@ -277,6 +277,13 @@ async function knackApiViewPutMany2(payload) {
                 })
             }
             console.log("api call completed")
+
+            for (var rec of responses) {
+
+
+            }
+
+
             result.push(responses)
             // return responses
         } catch (err) {
@@ -287,5 +294,5 @@ async function knackApiViewPutMany2(payload) {
 
     return result
 
-    
+
 }
