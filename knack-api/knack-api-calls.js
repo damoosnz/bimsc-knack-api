@@ -1,5 +1,6 @@
 import KnackAPI from 'knack-api-helper';
 import { knackApiInit } from './knack-api-init.js'
+import { knackApi } from '../index.js';
 
 // get
 async function knackApiViewGetSingle(payload) {
@@ -263,23 +264,27 @@ async function knackApiViewPutMany2(payload) {
         batches.push(batch)
     }
 
-    const responses = []
+    const result = []
 
     for (var batch of batches) {
-
-    }
-
-    try {
-        const responses = await knackAPI.putMany(payload);
-        if (responses.summary.rejected > 0) {
-            res.summary.errors.forEach(err => {
-                errorHandler(err.reason);
-            })
+        const batchPayload = knackApi.payloads.putMany(payload.scene, payload.view, batch)
+        try {
+            const responses = await knackAPI.putMany(payload);
+            if (responses.summary.rejected > 0) {
+                res.summary.errors.forEach(err => {
+                    errorHandler(err.reason);
+                })
+            }
+            console.log("api call completed")
+            result.push(responses)
+            // return responses
+        } catch (err) {
+            console.log("api call failed", err)
+            return null;
         }
-        console.log("api call completed")
-        return responses
-    } catch (err) {
-        console.log("api call failed", err)
-        return null;
     }
+
+    return result
+
+    
 }
