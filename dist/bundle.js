@@ -795,11 +795,10 @@ async function knackApiViewPutSingle(payload) {
   }
 }
 async function knackApiViewPutMany(payload) {
-  const knackAPI = await knackApiInit();
   console.log("api call started");
   const records2 = payload.records;
   const numRecords = records2.length;
-  const recPerBatch = 1e3;
+  const recPerBatch = 100;
   const numBatches = Math.ceil(numRecords / recPerBatch);
   const batches = [];
   for (var i = 0; i < numBatches; i++) {
@@ -807,7 +806,11 @@ async function knackApiViewPutMany(payload) {
     batches.push(batch2);
   }
   const resArray = [];
+  let curBatch = 0;
   for (var batch of batches) {
+    curBatch += 1;
+    console.log(`processing batch ${curBatch} of ${numBatches}`);
+    const knackAPI = await knackApiInit();
     const batchPayload = knackApi.payloads.putMany(payload.scene, payload.view, batch);
     try {
       const responses = await knackAPI.putMany(batchPayload);
@@ -816,13 +819,13 @@ async function knackApiViewPutMany(payload) {
           console.log(JSON.stringify(err.reason));
         });
       }
-      console.log("api call completed");
       resArray.push(responses);
     } catch (err) {
       console.log("api call failed", err);
       return null;
     }
   }
+  console.log("api call completed");
   const result = combineResponses(resArray);
   return result;
 }
