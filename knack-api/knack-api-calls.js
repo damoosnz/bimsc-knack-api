@@ -111,21 +111,44 @@ async function knackApiViewPutSingle(payload) {
 }
 
 async function knackApiViewPutMany(payload) {
+
     const knackAPI = await knackApiInit()
     console.log("api call started")
-    try {
-        const responses = await knackAPI.putMany(payload);
-        if (responses.summary.rejected > 0) {
-            res.summary.errors.forEach(err => {
-                errorHandler(err.reason);
-            })
-        }
-        console.log("api call completed")
-        return responses
-    } catch (err) {
-        console.log("api call failed", err)
-        return null;
+
+    const records = payload.records
+    const numRecords = records.length
+    const recPerBatch = 1000
+    const numBatches = Math.ceil(numRecords / recPerBatch)
+    const batches = []
+
+    for (var i = 0; i < numBatches; i++) {
+        const batch = records.slice(i * recPerBatch, (i + 1) * recPerBatch)
+        batches.push(batch)
     }
+
+    const resArray = []
+
+    for (var batch of batches) {
+        const batchPayload = knackApi.payloads.putMany(payload.scene, payload.view, batch)
+        try {
+            const responses = await knackAPI.putMany(batchPayload);
+            if (responses.summary.rejected > 0) {
+                res.summary.errors.forEach(err => {
+                    errorHandler(err.reason);
+                })
+            }
+            console.log("api call completed")
+            resArray.push(responses)
+            // return responses
+        } catch (err) {
+            console.log("api call failed", err)
+            return null;
+        }
+    }
+
+    const result = combineResponses(resArray)
+    return result
+
 }
 
 // delete
@@ -232,6 +255,38 @@ async function fetchAPIcall(payload, headers) {
     }
 }
 
+function combineResponses(resArray) {
+
+    let combinedObjects = [];
+    let mergedSettings = { records: [], scene: '', view: '' };
+    let mergedSummary = { errors: [], fulfilled: 0, rejected: 0 };
+
+    // Assuming the first array has the correct scene and view (as they are the same)    
+    mergedSettings.scene = resArray[0].settings.scene;
+    mergedSettings.view = resArray[0].settings.view;
+
+    // Loop through each array in arrayOfArrays
+    for (let arr of resArray) {
+        // Merge objects (excluding the last element which is settings and summary)
+        combinedObjects = [...combinedObjects, ...arr];
+
+        // Merge settings - concatenate the record arrays
+        mergedSettings.record = [...mergedSettings.records, ...arr.settings.records];
+
+        // Merge summary
+        mergedSummary.errors = [...mergedSummary.errors, ...arr.summary.errors];
+        mergedSummary.fulfilled += arr.summary.fulfilled;
+        mergedSummary.rejected += arr.summary.rejected;
+    }
+
+    // Add the merged settings and summary to the combined array
+    combinedObjects.settings= mergedSettings
+    combinedObjects.summary = mergedSummary
+
+    return combinedObjects;
+
+}
+
 export const calls = {
     // get
     getSingle: (payload) => knackApiViewGetSingle(payload),
@@ -242,57 +297,28 @@ export const calls = {
     postMany: (payload) => knackApiViewPostMany(payload),
     //put
     putMany: (payload) => knackApiViewPutMany(payload),
-    putMany2: (payload) => knackApiViewPutMany2(payload),
     putSingle: (payload) => knackApiViewPutSingle(payload),
     // delete
     deleteSingle: (payload) => knackApiViewDeleteSingle(payload),
 
 }
 
-async function knackApiViewPutMany2(payload) {
 
+
+async function knackApiViewPutManyArchived(payload) {
     const knackAPI = await knackApiInit()
     console.log("api call started")
-
-    const records = payload.records
-    const numRecords = records.length
-    const recPerBatch = 1000
-    const numBatches = Math.ceil(numRecords / recPerBatch)
-    const batches = []
-
-    for (var i = 0; i < numBatches; i++) {
-        const batch = records.slice(i * recPerBatch, (i + 1) * recPerBatch)
-        batches.push(batch)
-    }
-
-    const result = []
-
-    for (var batch of batches) {
-        const batchPayload = knackApi.payloads.putMany(payload.scene, payload.view, batch)
-        try {
-            const responses = await knackAPI.putMany(batchPayload);
-            if (responses.summary.rejected > 0) {
-                res.summary.errors.forEach(err => {
-                    errorHandler(err.reason);
-                })
-            }
-            console.log("api call completed")
-
-            for (var rec of responses) {
-
-
-            }
-
-
-            result.push(responses)
-            // return responses
-        } catch (err) {
-            console.log("api call failed", err)
-            return null;
+    try {
+        const responses = await knackAPI.putMany(payload);
+        if (responses.summary.rejected > 0) {
+            res.summary.errors.forEach(err => {
+                errorHandler(err.reason);
+            })
         }
+        console.log("api call completed")
+        return responses
+    } catch (err) {
+        console.log("api call failed", err)
+        return null;
     }
-
-    return result
-
-
 }
