@@ -112,7 +112,7 @@ async function knackApiViewPutSingle(payload) {
 
 async function knackApiViewPutMany(payload) {
 
-    const knackAPI = await knackApiInit()
+
     console.log("api call started")
 
     const records = payload.records
@@ -122,6 +122,7 @@ async function knackApiViewPutMany(payload) {
     const batches = []
 
     for (var i = 0; i < numBatches; i++) {
+
         const batch = records.slice(i * recPerBatch, (i + 1) * recPerBatch)
         batches.push(batch)
     }
@@ -134,6 +135,7 @@ async function knackApiViewPutMany(payload) {
         curBatch += 1
         console.log(`processing batch ${curBatch} of ${numBatches}`)
 
+        const knackAPI = await knackApiInit()
         const batchPayload = knackApi.payloads.putMany(payload.scene, payload.view, batch)
         try {
             const responses = await knackAPI.putMany(batchPayload);
