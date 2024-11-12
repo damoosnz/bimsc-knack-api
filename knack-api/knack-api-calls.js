@@ -117,7 +117,7 @@ async function knackApiViewPutMany(payload) {
 
     const records = payload.records
     const numRecords = records.length
-    const recPerBatch = 1000
+    const recPerBatch = 100
     const numBatches = Math.ceil(numRecords / recPerBatch)
     const batches = []
 
@@ -127,17 +127,22 @@ async function knackApiViewPutMany(payload) {
     }
 
     const resArray = []
+    let curBatch = 0
 
     for (var batch of batches) {
+
+        curBatch += 1
+        console.log(`processing batch ${curBatch} of ${numBatches}`)
+
         const batchPayload = knackApi.payloads.putMany(payload.scene, payload.view, batch)
         try {
             const responses = await knackAPI.putMany(batchPayload);
             if (responses.summary.rejected > 0) {
-                res.summary.errors.forEach(err => {
-                    errorHandler(err.reason);
+                responses.summary.errors.forEach(err => {
+                    console.log(JSON.stringify(err.reason));
                 })
             }
-            console.log("api call completed")
+
             resArray.push(responses)
             // return responses
         } catch (err) {
@@ -145,6 +150,8 @@ async function knackApiViewPutMany(payload) {
             return null;
         }
     }
+
+    console.log("api call completed")
 
     const result = combineResponses(resArray)
     return result
@@ -280,7 +287,7 @@ function combineResponses(resArray) {
     }
 
     // Add the merged settings and summary to the combined array
-    combinedObjects.settings= mergedSettings
+    combinedObjects.settings = mergedSettings
     combinedObjects.summary = mergedSummary
 
     return combinedObjects;
