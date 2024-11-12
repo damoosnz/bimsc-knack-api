@@ -117,7 +117,7 @@ async function knackApiViewPutMany(payload) {
 
     const records = payload.records
     const numRecords = records.length
-    const recPerBatch = 100
+    const recPerBatch = 20
     const numBatches = Math.ceil(numRecords / recPerBatch)
     const batches = []
 
