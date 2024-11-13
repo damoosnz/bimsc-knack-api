@@ -63,23 +63,58 @@ async function knackApiViewGetManyParentRecord(payload) {
 }
 
 // post
+
 async function knackApiViewPostMany(payload) {
-    const knackAPI = await knackApiInit()
+
     console.log("api call started")
-    try {
-        const responses = await knackAPI.postMany(payload);
-        if (responses.summary.rejected > 0) {
-            responses.summary.errors.forEach(err => {
-                console.log(JSON.stringify(err.reason));
-            })
-        }
-        console.log("api call completed")
-        return responses
-    } catch (err) {
-        console.log("api call failed", err)
-        return null;
+
+    const records = payload.records
+    const numRecords = records.length
+    const recPerBatch = 100
+    const numBatches = Math.ceil(numRecords / recPerBatch)
+    const batches = []
+
+    for (var i = 0; i < numBatches; i++) {
+
+        const batch = records.slice(i * recPerBatch, (i + 1) * recPerBatch)
+        batches.push(batch)
     }
+
+    const resArray = []
+    let curBatch = 0
+
+    for (var batch of batches) {
+
+        curBatch += 1
+        console.log(`processing batch ${curBatch} of ${numBatches}`)
+
+        const knackAPI = await knackApiInit()
+        const batchPayload = knackApi.payloads.postMany(payload.scene, payload.view, batch)
+        try {
+            const responses = await knackAPI.putMany(batchPayload);
+            if (responses.summary.rejected > 0) {
+                responses.summary.errors.forEach(err => {
+                    console.log(JSON.stringify(err.reason));
+                })
+            }
+
+            resArray.push(responses)
+            // return responses
+        } catch (err) {
+            console.log("api call failed", err)
+            return null;
+        }
+    }
+
+    console.log("api call completed")
+
+    const result = combineResponses(resArray)
+    return result
+
 }
+
+
+
 
 async function knackApiViewPostSingle(payload) {
     const knackAPI = await knackApiInit()
@@ -322,6 +357,26 @@ async function knackApiViewPutManyArchived(payload) {
         if (responses.summary.rejected > 0) {
             res.summary.errors.forEach(err => {
                 errorHandler(err.reason);
+            })
+        }
+        console.log("api call completed")
+        return responses
+    } catch (err) {
+        console.log("api call failed", err)
+        return null;
+    }
+}
+
+async function knackApiViewPostManyArchived(payload) {
+
+
+    const knackAPI = await knackApiInit()
+    console.log("api call started")
+    try {
+        const responses = await knackAPI.postMany(payload);
+        if (responses.summary.rejected > 0) {
+            responses.summary.errors.forEach(err => {
+                console.log(JSON.stringify(err.reason));
             })
         }
         console.log("api call completed")
