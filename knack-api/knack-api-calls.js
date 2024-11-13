@@ -91,7 +91,7 @@ async function knackApiViewPostMany(payload) {
         const knackAPI = await knackApiInit()
         const batchPayload = knackApi.payloads.postMany(payload.scene, payload.view, batch)
         try {
-            const responses = await knackAPI.putMany(batchPayload);
+            const responses = await knackAPI.postMany(batchPayload);
             if (responses.summary.rejected > 0) {
                 responses.summary.errors.forEach(err => {
                     console.log(JSON.stringify(err.reason));
