@@ -9,17 +9,19 @@ function createKnackApiConfig(nickName, runEnv, app_id, login, password) {
     }
 }
 
-const defaultConfig = {
-    default: {
-        runEnv: process.env.KNACK_API_RUNENV,
-        app_id: process.env.KNACK_APP_ID,
-        login: process.env.KNACK_API_LOGIN || '',
-        password: process.env.KNACK_API_PASSWORD || ''
-    }
 
-}
 
 function initKnackApiConfig(userConfigs = []) {
+
+    const defaultConfig = {
+        default: {
+            runEnv: process.env.KNACK_API_RUNENV,
+            app_id: process.env.KNACK_APP_ID,
+            login: process.env.KNACK_API_LOGIN || '',
+            password: process.env.KNACK_API_PASSWORD || ''
+        }
+    
+    }
 
     let configs = [defaultConfig]
     if (userConfigs.length > 0)
