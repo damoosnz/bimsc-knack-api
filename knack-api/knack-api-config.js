@@ -25,7 +25,7 @@ function initKnackApiConfig(userConfigs = []) {
 
     let configs = [defaultConfig]
     if (userConfigs.length > 0)
-        userConfigs.forEach(config => { configs, push(config) });
+        userConfigs.forEach(config => { configs.push(config) });
     return configs
 
 }
