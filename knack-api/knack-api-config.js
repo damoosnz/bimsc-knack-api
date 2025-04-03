@@ -4,7 +4,7 @@ function createKnackApiConfig(nickName, runEnv, app_id, login, password) {
             runEnv: runEnv,
             app_id: app_id,
             login: login || '',
-            password: password || ''
+            password: password || '',
         }
     }
 }
@@ -78,7 +78,7 @@ function checkDefaultConfig() {
 
 
 export const config = {
-    create: (runEnv, app_id, login, password) => createKnackApiConfig(runEnv, app_id, login, password),
+    create: (nickName, runEnv, app_id, login, password) => createKnackApiConfig(nickName, runEnv, app_id, login, password),
     init: (userConfigs) => initKnackApiConfig(userConfigs),
     checkDefault: () => checkDefaultConfig()
 }
