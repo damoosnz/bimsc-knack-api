@@ -13,20 +13,20 @@ function createKnackApiConfig(nickName, runEnv, app_id, login, password) {
 
 function initKnackApiConfig(userConfigs = []) {
 
-    const defaultConfig = {
+    const config = {
         default: {
             runEnv: process.env.KNACK_API_RUNENV,
             app_id: process.env.KNACK_APP_ID,
             login: process.env.KNACK_API_LOGIN || '',
             password: process.env.KNACK_API_PASSWORD || ''
         }
-
     }
 
-    let configs = [defaultConfig]
-    if (userConfigs.length > 0)
-        userConfigs.forEach(config => { configs.push(config) });
-    return configs
+    userConfigs.forEach(userConfig => {
+        Object.assign(config, userConfig);
+    });
+
+    return config
 
 }
 
