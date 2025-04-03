@@ -3,8 +3,8 @@ import { knackApiInit } from './knack-api-init.js'
 import { knackApi } from '../index.js';
 
 // get
-async function knackApiViewGetSingle(payload) {
-    const knackAPI = await knackApiInit()
+async function knackApiViewGetSingle(payload, config) {
+    const knackAPI = await knackApiInit(config)
     console.log("api call started")
     try {
         const response = await knackAPI.get(payload)
@@ -17,8 +17,8 @@ async function knackApiViewGetSingle(payload) {
     }
 }
 
-async function knackApiViewGetMany(payload) {
-    const knackAPI = await knackApiInit()
+async function knackApiViewGetMany(payload, config) {
+    const knackAPI = await knackApiInit(config)
     console.log("api call started")
     try {
         const resRecords = await knackAPI.getMany(payload);
@@ -30,6 +30,7 @@ async function knackApiViewGetMany(payload) {
     }
 }
 
+// browser only for the moment
 async function knackApiViewGetManyParentRecord(payload) {
 
     const basePayload = payload
@@ -64,13 +65,13 @@ async function knackApiViewGetManyParentRecord(payload) {
 
 // post
 
-async function knackApiViewPostMany(payload) {
+async function knackApiViewPostMany(payload, chunksSize = 100, config) {
 
     console.log("api call started")
 
     const records = payload.records
     const numRecords = records.length
-    const recPerBatch = 100
+    const recPerBatch = chunksSize
     const numBatches = Math.ceil(numRecords / recPerBatch)
     const batches = []
 
@@ -88,7 +89,7 @@ async function knackApiViewPostMany(payload) {
         curBatch += 1
         console.log(`processing batch ${curBatch} of ${numBatches}`)
 
-        const knackAPI = await knackApiInit()
+        const knackAPI = await knackApiInit(config)
         const batchPayload = knackApi.payloads.postMany(payload.scene, payload.view, batch)
         try {
             const responses = await knackAPI.postMany(batchPayload);
@@ -113,11 +114,8 @@ async function knackApiViewPostMany(payload) {
 
 }
 
-
-
-
-async function knackApiViewPostSingle(payload) {
-    const knackAPI = await knackApiInit()
+async function knackApiViewPostSingle(payload, config) {
+    const knackAPI = await knackApiInit(config)
     console.log("api call started")
     try {
         const response = await knackAPI.post(payload);
@@ -131,8 +129,8 @@ async function knackApiViewPostSingle(payload) {
 }
 
 // put
-async function knackApiViewPutSingle(payload) {
-    const knackAPI = await knackApiInit()
+async function knackApiViewPutSingle(payload, config) {
+    const knackAPI = await knackApiInit(config)
     console.log("api call started")
     try {
         const response = await knackAPI.put(payload);
@@ -145,14 +143,14 @@ async function knackApiViewPutSingle(payload) {
     }
 }
 
-async function knackApiViewPutMany(payload) {
+async function knackApiViewPutMany(payload, chunksSize = 100, config) {
 
 
     console.log("api call started")
 
     const records = payload.records
     const numRecords = records.length
-    const recPerBatch = 100
+    const recPerBatch = chunksSize
     const numBatches = Math.ceil(numRecords / recPerBatch)
     const batches = []
 
@@ -170,7 +168,7 @@ async function knackApiViewPutMany(payload) {
         curBatch += 1
         console.log(`processing batch ${curBatch} of ${numBatches}`)
 
-        const knackAPI = await knackApiInit()
+        const knackAPI = await knackApiInit(config)
         const batchPayload = knackApi.payloads.putMany(payload.scene, payload.view, batch)
         try {
             const responses = await knackAPI.putMany(batchPayload);
@@ -196,8 +194,8 @@ async function knackApiViewPutMany(payload) {
 }
 
 // delete
-async function knackApiViewDeleteSingle(payload) {
-    const knackAPI = await knackApiInit()
+async function knackApiViewDeleteSingle(payload, config) {
+    const knackAPI = await knackApiInit(config)
     console.log("api call started")
     try {
         const response = await knackAPI.delete(payload)
@@ -209,8 +207,8 @@ async function knackApiViewDeleteSingle(payload) {
     }
 }
 
-// report
-async function knackApiViewGetFromReport(payload) {
+// report in browser only for filters
+async function knackApiViewGetFromReport(payload, config) {
 
     if (payload.filters) {
 
@@ -229,11 +227,7 @@ async function knackApiViewGetFromReport(payload) {
 
     } else {
 
-        const knackAPI = new KnackAPI({
-            auth: 'view-based',
-            applicationId: Knack.application_id,
-            userToken: Knack.getUserToken()
-        });
+        const knackAPI = await knackApiInit(config)
 
         console.log("api call started")
 
@@ -255,12 +249,10 @@ async function knackApiViewGetFromReport(payload) {
 
 }
 
-// uplaod file/image asset
+// uplaod file/image asset in browser only for the moment
 async function knackUploadAsset(file) {
 
     var url = `https://api.knack.com/v1/applications/${Knack.application_id}/assets/file/upload`
-
-
 
     const formData = new FormData();
     formData.append('files', file)
@@ -333,17 +325,17 @@ function combineResponses(resArray) {
 
 export const calls = {
     // get
-    getSingle: (payload) => knackApiViewGetSingle(payload),
-    getMany: (payload) => knackApiViewGetMany(payload),
+    getSingle: (payload, config) => knackApiViewGetSingle(payload, config),
+    getMany: (payload, config) => knackApiViewGetMany(payload, config),
     getManyParentRecord: (payload) => knackApiViewGetManyParentRecord(payload),
     // post
-    postSingle: (payload) => knackApiViewPostSingle(payload),
-    postMany: (payload) => knackApiViewPostMany(payload),
+    postSingle: (payload, config) => knackApiViewPostSingle(payload, config),
+    postMany: (payload, chunksSize, config) => knackApiViewPostMany(payload, chunksSize, config),
     //put
-    putMany: (payload) => knackApiViewPutMany(payload),
-    putSingle: (payload) => knackApiViewPutSingle(payload),
+    putMany: (payload, chunksSize, config) => knackApiViewPutMany(payload, chunksSize, config),
+    putSingle: (payload, config) => knackApiViewPutSingle(payload, config),
     // delete
-    deleteSingle: (payload) => knackApiViewDeleteSingle(payload),
+    deleteSingle: (payload, config) => knackApiViewDeleteSingle(payload, config),
 
 }
 
