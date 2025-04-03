@@ -20,7 +20,7 @@ function initKnackApiConfig(userConfigs = []) {
             login: process.env.KNACK_API_LOGIN || '',
             password: process.env.KNACK_API_PASSWORD || ''
         }
-    
+
     }
 
     let configs = [defaultConfig]
@@ -34,36 +34,36 @@ function checkDefaultConfig() {
 
     // check if the runEnv is defined
     const runEnv = process.env.KNACK_API_RUNENV
-    if(!runEnv) {
+    if (!runEnv) {
         console.log('runEnv is not specified')
         return false
     }
 
-    if(runEnv !== 'browser' || runEnv !== 'server') {
+    if (runEnv !== 'browser' && runEnv !== 'server') {
         console.log('runEnv must be either browser or server')
         return false
     }
 
-    if(runEnv = 'browser') {
+    if (runEnv = 'browser') {
         return true
     }
 
-    if(runEnv = 'server') {
+    if (runEnv = 'server') {
         // check application id
-        const applicationId =  process.env.KNACK_APP_ID
-        if(!applicationId) {
+        const applicationId = process.env.KNACK_APP_ID
+        if (!applicationId) {
             console.log('application id must be specified')
             return false
         }
 
         const email = process.env.KNACK_API_LOGIN
-        if(!email) {
+        if (!email) {
             console.log('login must be specified')
             return false
         }
 
         const password = process.env.KNACK_API_PASSWORD
-        if(!password) {
+        if (!password) {
             console.log('password must be specified')
             return false
         }
