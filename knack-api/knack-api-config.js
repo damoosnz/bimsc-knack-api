@@ -44,11 +44,11 @@ function checkDefaultConfig() {
         return false
     }
 
-    if (runEnv = 'browser') {
+    if (runEnv === 'browser') {
         return true
     }
 
-    if (runEnv = 'server') {
+    if (runEnv === 'server') {
         // check application id
         const applicationId = process.env.KNACK_APP_ID
         if (!applicationId) {
