@@ -25,7 +25,7 @@ export async function knackApiInit(config = undefined) {
             knackPassword = config.password
         }
 
-        const userToken = await knackLogin(knackAppId, knackLogin, knackPassword )
+        const userToken = await getKnackToken(knackAppId, knackLogin, knackPassword )
         return new KnackAPI({
             auth: 'view-based',
             applicationId: process.env.KNACK_APP_ID,
@@ -37,7 +37,7 @@ export async function knackApiInit(config = undefined) {
 
 // login
 
-async function knackLogin(knackAppId, knackLogin, knackPassword ) {
+async function getKnackToken(knackAppId, knackLogin, knackPassword ) {
 
     //Initialize without a user token
     const knackAPI = new KnackAPI({
