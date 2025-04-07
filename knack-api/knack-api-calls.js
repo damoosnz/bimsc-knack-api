@@ -5,27 +5,27 @@ import { knackApi } from '../index.js';
 // get
 async function knackApiViewGetSingle(payload, config) {
     const knackAPI = await knackApiInit(config)
-    console.log("api call started")
+    console.log('api call started for getSingle()')
     try {
         const response = await knackAPI.get(payload)
-        console.log("api call completed")
+        console.log("api call completed for getSingle()")
         const responseJson = response.json
         return responseJson
     } catch (err) {
-        console.log("api call failed", err)
+        console.log("api call failed for getSingle()", err)
         return null;
     }
 }
 
 async function knackApiViewGetMany(payload, config) {
     const knackAPI = await knackApiInit(config)
-    console.log("api call started")
+    console.log("api call started for getMany()")
     try {
         const resRecords = await knackAPI.getMany(payload);
-        console.log("api call completed")
+        console.log("api call completed for getMany()")
         return resRecords.records
     } catch (err) {
-        console.log("api call failed", err)
+        console.log("api call failed for getMany()", err)
         return null;
     }
 }
@@ -67,7 +67,7 @@ async function knackApiViewGetManyParentRecord(payload) {
 
 async function knackApiViewPostMany(payload, chunksSize = 100, config) {
 
-    console.log("api call started")
+    console.log("api call started for postMany()")
 
     const records = payload.records
     const numRecords = records.length
@@ -102,12 +102,12 @@ async function knackApiViewPostMany(payload, chunksSize = 100, config) {
             resArray.push(responses)
             // return responses
         } catch (err) {
-            console.log("api call failed", err)
+            console.log("api call failed  for postMany()", err)
             return null;
         }
     }
 
-    console.log("api call completed")
+    console.log("api call completed for postMany()")
 
     const result = combineResponses(resArray)
     return result
@@ -116,14 +116,14 @@ async function knackApiViewPostMany(payload, chunksSize = 100, config) {
 
 async function knackApiViewPostSingle(payload, config) {
     const knackAPI = await knackApiInit(config)
-    console.log("api call started")
+    console.log("api call started for postSingle()")
     try {
         const response = await knackAPI.post(payload);
         const recordCreated = response.json;
-        console.log("api call completed")
+        console.log("api call completed for postSingle()")
         return recordCreated
     } catch (err) {
-        console.log("api call failed", err)
+        console.log("api call failed for postSingle()", err)
         return null;
     }
 }
@@ -131,14 +131,14 @@ async function knackApiViewPostSingle(payload, config) {
 // put
 async function knackApiViewPutSingle(payload, config) {
     const knackAPI = await knackApiInit(config)
-    console.log("api call started")
+    console.log("api call started for putSingle()")
     try {
         const response = await knackAPI.put(payload);
         const responseJson = await response.json
-        console.log("api call completed")
+        console.log("api call completed for putSingle()")
         return responseJson
     } catch (err) {
-        console.log("api call failed", err)
+        console.log("api call failed for putSingle()", err)
         return null;
     }
 }
@@ -146,7 +146,7 @@ async function knackApiViewPutSingle(payload, config) {
 async function knackApiViewPutMany(payload, chunksSize = 100, config) {
 
 
-    console.log("api call started")
+    console.log("api call started for putMany()")
 
     const records = payload.records
     const numRecords = records.length
@@ -181,12 +181,12 @@ async function knackApiViewPutMany(payload, chunksSize = 100, config) {
             resArray.push(responses)
             // return responses
         } catch (err) {
-            console.log("api call failed", err)
+            console.log("api call failed for putMany()", err)
             return null;
         }
     }
 
-    console.log("api call completed")
+    console.log("api call completed for putMany()")
 
     const result = combineResponses(resArray)
     return result
@@ -196,13 +196,13 @@ async function knackApiViewPutMany(payload, chunksSize = 100, config) {
 // delete
 async function knackApiViewDeleteSingle(payload, config) {
     const knackAPI = await knackApiInit(config)
-    console.log("api call started")
+    console.log("api call started for deleteSingle()")
     try {
         const response = await knackAPI.delete(payload)
-        console.log("api call completed")
+        console.log("api call completed for deleteSingle()")
         return response
     } catch (err) {
-        console.log("api call failed", err)
+        console.log("api call failed for deleteSingle()", err)
         return null;
     }
 }
@@ -212,7 +212,7 @@ async function knackApiViewGetFromReport(payload, config) {
 
     if (payload.filters) {
 
-        console.log("api call made from url")
+        console.log("api call made from url for getReport()")
 
         var headers = {
             'Authorization': Knack.getUserToken(),
@@ -223,23 +223,24 @@ async function knackApiViewGetFromReport(payload, config) {
 
         var responseJson = await fetchAPIcall(payload.url, headers)
         var records = responseJson.report.records
+        console.log("api call completed from url for getReport()")
         return records
 
     } else {
 
         const knackAPI = await knackApiInit(config)
 
-        console.log("api call started")
+        console.log("api call started for getReport()")
 
         try {
 
             const reportDataResponse = await knackAPI.getFromReportView(payload)
-            console.log("api call completed")
+            console.log("api call completed for getReport()")
             const response = reportDataResponse.json.reports[0].records
             return response
 
         } catch (err) {
-            console.log("api call failed", err)
+            console.log("api call failed for getReport()", err)
             return null;
         }
 
